@@ -44,7 +44,7 @@ const Signup = async (req, res) => {
       text: `Welcome to G&A Ecommerce you have created the account on G&A with emial id : ${email}`,
     };
     // Send welcome email, but don't block signup if SMTP fails
-    transporter.sendMail(mailOptions).catch(err => console.log("Error sending welcome email"));
+    transporter.sendMail(mailOptions).catch(err => console.log("Error sending welcome email:", err));;
 
     return res.status(201).json({
       success: true,
