@@ -2,8 +2,7 @@ const express = require("express");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const transporter = require("../config/nodemailer")
-
+const sendWelcomeEmail = require("../config/brevoMailer");
 // Signup Controller
 const Signup = async (req, res) => {
   try {
@@ -37,15 +36,15 @@ const Signup = async (req, res) => {
       email: user.email,
       role: user.role,
     };
-    const mailOptions = {
-      from: process.env.SENDER_EMAIL,
-      to: email,
-      subject: "Welcome To G&A - Ecommerce",
-      text: `Welcome to G&A Ecommerce you have created the account on G&A with emial id : ${email}`,
-    };
-    // Send welcome email, but don't block signup if SMTP fails
-    transporter.sendMail(mailOptions).catch(err => console.log("Error sending welcome email:", err));;
-
+    // const mailOptions = {
+    //   from: process.env.SENDER_EMAIL,
+    //   to: email,
+    //   subject: "Welcome To G&A - Ecommerce",
+    //   text: `Welcome to G&A Ecommerce you have created the account on G&A with emial id : ${email}`,
+    // };
+    // // Send welcome email, but don't block signup if SMTP fails
+    // transporter.sendMail(mailOptions).catch(err => console.log("Error sending welcome email:", err));;
+    sendWelcomeEmail(email);
     return res.status(201).json({
       success: true,
       message: "User account created successfully",
