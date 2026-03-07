@@ -7,7 +7,7 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {  
         e.preventDefault();
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         try {
