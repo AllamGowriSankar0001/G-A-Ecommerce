@@ -1,11 +1,23 @@
 const express = require("express");
-const { Signup, Login, Allusers, getMe, updateMe } = require("../controllers/userController");
+const {
+  Signup,
+  Login,
+  Allusers,
+  getMe,
+  updateMe,
+  sendverificationcodemail,
+  verifyEmail,
+  requestPasswordReset,
+  resetPassword,
+} = require("../controllers/userController");
 const Auth = require("../middleware/AuthVerify");
 
 const router = express.Router();
 
 router.post("/signup", Signup);
 router.post("/login", Login);
+router.post("/forgot-password", requestPasswordReset);
+router.post("/reset-password", resetPassword);
 router.get("/allusers", Auth, Allusers);
 
 // Basic auth check for frontend
@@ -20,5 +32,7 @@ router.get("/verify", Auth, (req, res) => {
 router.get("/me", Auth, getMe);
 router.put("/me", Auth, updateMe);
 
+router.put("/sendverificationcode", Auth, sendverificationcodemail);
+router.post("/verify-email", Auth, verifyEmail);
+
 module.exports = router;
- 

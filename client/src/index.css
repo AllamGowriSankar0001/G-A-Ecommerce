@@ -1684,6 +1684,106 @@ body::-webkit-scrollbar {
   border-radius: 8px;
 }
 
+.account-verification-card {
+  margin-bottom: 20px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fffbeb;
+  border-color: #fed7aa;
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: 0 4px 20px rgba(248, 180, 0, 0.14);
+}
+
+.account-verification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.account-status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.account-status-pill--warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.account-status-pill--success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #22c55e;
+}
+
+.account-verification-text {
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+.account-verification-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  align-items: flex-start;
+}
+
+.account-verification-form label span {
+  font-size: 0.9rem;
+}
+
+.account-verification-form input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
+  margin-left: 20px;
+}
+
+.account-verification-form input:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.account-verification-code-input {
+  max-width: 200px;
+  text-align: center;
+  font-family: inherit;
+  letter-spacing: 0.18em;
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.account-verification-hint {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.account-verification-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+  justify-content: flex-start;
+}
+
 .account-btn {
   padding: 12px 24px;
   border-radius: 10px;

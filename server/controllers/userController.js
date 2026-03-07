@@ -2,7 +2,11 @@ const express = require("express");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const sendWelcomeEmail = require("../config/brevoMailer");
+const {
+  sendWelcomeEmail,
+  sendVerificationCode,
+  sendPasswordResetCode,
+} = require("../config/brevoMailer");
 // Signup Controller
 const Signup = async (req, res) => {
   try {
@@ -166,6 +170,260 @@ const getMe = async (req, res) => {
   }
 };
 
+const sendverificationcodemail = async (req, res) => {
+  try {
+    const email = req.user?.email;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to determine current user",
+      });
+    }
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Your email is already verified.",
+      });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    user.verifyotp = otp;
+    user.verifyotpExpiry = Date.now() + 5 * 60 * 1000;
+
+    await user.save();
+    await sendVerificationCode(email, otp);
+
+    return res.status(200).json({
+      success: true,
+      message: "Verification code has been sent to your email address.",
+      expiresAt: user.verifyotpExpiry,
+    });
+  } catch (error) {
+    console.error("Error sending verification code email:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+const verifyEmail = async (req, res) => {
+  try {
+    const email = req.user?.email;
+    const { otp } = req.body || {};
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to determine current user",
+      });
+    }
+
+    if (!otp || typeof otp !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Verification code is required",
+      });
+    }
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).json({
+        success: true,
+        message: "Your email is already verified.",
+        user,
+      });
+    }
+
+    if (!user.verifyotp || !user.verifyotpExpiry) {
+      return res.status(400).json({
+        success: false,
+        message: "No active verification code found. Please request a new code.",
+      });
+    }
+
+    if (user.verifyotp !== otp.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "The verification code you entered is incorrect.",
+      });
+    }
+
+    if (user.verifyotpExpiry < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "This verification code has expired. Please request a new code.",
+      });
+    }
+
+    user.isVerified = true;
+    user.verifyotp = "";
+    user.verifyotpExpiry = 0;
+
+    const savedUser = await user.save();
+
+    // ensure we don't send password/reset fields even if they exist
+    const safeUser = await userModel
+      .findById(savedUser._id)
+      .select("-password -resetToken");
+
+    return res.status(200).json({
+      success: true,
+      message: "Your email has been verified successfully.",
+      user: safeUser,
+    });
+  } catch (error) {
+    console.error("Error verifying email:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+const requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body || {};
+
+    if (!email || typeof email !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await userModel.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      // For security, respond with generic message
+      return res.status(200).json({
+        success: true,
+        message: "If an account exists for this email, a reset code has been sent.",
+      });
+    }
+
+    if (user.isBlocked) {
+      return res.status(403).json({
+        success: false,
+        message: "This account is blocked. Please contact support.",
+      });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    user.resetOtp = otp;
+    user.resetOtpExpiry = Date.now() + 5 * 60 * 1000;
+
+    await user.save();
+    await sendPasswordResetCode(normalizedEmail, otp);
+
+    return res.status(200).json({
+      success: true,
+      message: "If an account exists for this email, a reset code has been sent.",
+    });
+  } catch (error) {
+    console.error("Error requesting password reset:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body || {};
+
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, verification code and new password are required",
+      });
+    }
+
+    if (typeof newPassword !== "string" || newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters long",
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await userModel.findOne({ email: normalizedEmail }).select(
+      "+password"
+    );
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email or verification code",
+      });
+    }
+
+    if (!user.resetOtp || !user.resetOtpExpiry) {
+      return res.status(400).json({
+        success: false,
+        message: "No active reset code found. Please request a new code.",
+      });
+    }
+
+    if (user.resetOtp !== String(otp).trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "The verification code you entered is incorrect.",
+      });
+    }
+
+    if (user.resetOtpExpiry < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "This verification code has expired. Please request a new code.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetOtp = "";
+    user.resetOtpExpiry = 0;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Your password has been reset successfully. You can now sign in.",
+    });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 // Update basic profile fields for current user
 const updateMe = async (req, res) => {
   try {
@@ -307,4 +565,14 @@ const updateMe = async (req, res) => {
   }
 };
 
-module.exports = { Signup, Login, Allusers, getMe, updateMe };
+module.exports = {
+  Signup,
+  Login,
+  Allusers,
+  getMe,
+  updateMe,
+  sendverificationcodemail,
+  verifyEmail,
+  requestPasswordReset,
+  resetPassword,
+};

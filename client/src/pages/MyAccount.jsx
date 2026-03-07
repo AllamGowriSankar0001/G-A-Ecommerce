@@ -26,6 +26,12 @@ const MyAccount = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [sendingVerification, setSendingVerification] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [verificationStep, setVerificationStep] = useState("idle"); // idle | codeSent | verified
+  const [verificationMessage, setVerificationMessage] = useState("");
+  const [verificationError, setVerificationError] = useState("");
   const navigate = useNavigate();
 
   const getAuthHeaders = useCallback(() => {
@@ -74,6 +80,14 @@ const MyAccount = () => {
         currency: u?.preferences?.currency ?? "INR",
         language: u?.preferences?.language ?? "en",
       });
+      if (u?.isVerified) {
+        setVerificationStep("verified");
+      } else {
+        setVerificationStep("idle");
+      }
+      setVerificationMessage("");
+      setVerificationError("");
+      setVerificationCode("");
     } catch (err) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -163,6 +177,92 @@ const MyAccount = () => {
     }
   };
 
+  const handleSendVerificationEmail = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    try {
+      setSendingVerification(true);
+      setError("");
+      setSuccess("");
+      setVerificationError("");
+      setVerificationMessage("");
+
+      const res = await fetch(`${backendUrl}/users/sendverificationcode`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.success === false) {
+        throw new Error(data.message || "Failed to send verification code");
+      }
+
+      setVerificationStep("codeSent");
+      setVerificationMessage(
+        data.message || "Verification code sent to your email."
+      );
+    } catch (err) {
+      setVerificationError(
+        err.message ||
+          "Something went wrong while sending the verification code"
+      );
+    } finally {
+      setSendingVerification(false);
+    }
+  };
+
+  const handleVerifyCode = async (e) => {
+    e.preventDefault();
+    const trimmed = verificationCode.trim();
+    if (!trimmed) {
+      setVerificationError("Please enter the 6-digit verification code.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    try {
+      setVerifying(true);
+      setVerificationError("");
+      setVerificationMessage("");
+
+      const res = await fetch(`${backendUrl}/users/verify-email`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ otp: trimmed }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.success === false) {
+        throw new Error(data.message || "Failed to verify email");
+      }
+
+      const updatedUser = data.user || user;
+      setUser(updatedUser);
+      setVerificationStep("verified");
+      setVerificationCode("");
+      setVerificationMessage(
+        data.message || "Your email has been verified successfully."
+      );
+    } catch (err) {
+      setVerificationError(
+        err.message || "Something went wrong while verifying your email"
+      );
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   if (loading) {
     return (
       <main className="about-page">
@@ -229,6 +329,83 @@ const MyAccount = () => {
             </p>
           </header>
 
+          {user && !user.isVerified && (
+            <div className="account-card account-verification-card">
+              <div className="account-verification-header">
+                <h3 className="account-card-heading">Email verification</h3>
+                <span className="account-status-pill account-status-pill--warning">
+                  Not verified
+                </span>
+              </div>
+              <p className="account-verification-text">
+                {verificationStep === "codeSent"
+                  ? `We've sent a 6-digit verification code to ${user.email}. Enter it below to verify your account.`
+                  : `Verify your email address (${user.email}) to secure your account and unlock all features.`}
+              </p>
+              {verificationError && (
+                <p className="account-message error">{verificationError}</p>
+              )}
+              {verificationMessage && (
+                <p className="account-message success">{verificationMessage}</p>
+              )}
+
+              {verificationStep === "codeSent" ? (
+                <form
+                  className="account-verification-form"
+                  onSubmit={handleVerifyCode}
+                >
+                  <label>
+                    <span>Verification code</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      className="account-verification-code-input"
+                      value={verificationCode}
+                      onChange={(e) =>
+                        setVerificationCode(e.target.value.replace(/\D/g, ""))
+                      }
+                      placeholder="123456"
+                    />
+                  </label>
+                  <p className="account-verification-hint">
+                    Enter the 6-digit code we emailed you. This code expires in 5 minutes.
+                  </p>
+                  <div className="account-verification-actions">
+                    <button
+                      type="submit"
+                      className="account-btn primary"
+                      disabled={verifying || !verificationCode}
+                    >
+                      {verifying ? "Verifying…" : "Verify email"}
+                    </button>
+                    <button
+                      type="button"
+                      className="account-btn secondary"
+                      onClick={handleSendVerificationEmail}
+                      disabled={sendingVerification}
+                    >
+                      {sendingVerification ? "Resending…" : "Resend code"}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="account-verification-actions">
+                  <button
+                    type="button"
+                    className="account-btn primary"
+                    onClick={handleSendVerificationEmail}
+                    disabled={sendingVerification}
+                  >
+                    {sendingVerification
+                      ? "Sending…"
+                      : "Send verification code"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <nav className="account-quick-links" aria-label="Account shortcuts">
             <Link to="/orderhistory" className="account-quick-link">
               <i className="fa-solid fa-box" aria-hidden />
@@ -262,6 +439,14 @@ const MyAccount = () => {
                 <dl className="account-dl">
                   <dt>Phone</dt>
                   <dd>{user?.phone || "—"}</dd>
+                  <dt>Email status</dt>
+                  <dd>
+                    {user?.isVerified ? (
+                      <span style={{ color: "#15803d" }}>Verified</span>
+                    ) : (
+                      <span style={{ color: "#92400e" }}>Not verified</span>
+                    )}
+                  </dd>
                   <dt>Role</dt>
                   <dd className="account-dd-cap">{user?.role || "user"}</dd>
                   {user?.dateOfBirth && (
