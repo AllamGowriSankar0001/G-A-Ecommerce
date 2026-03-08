@@ -453,6 +453,36 @@ body::-webkit-scrollbar {
   background: #f9fafb;
 }
 
+/* About page stacked layout */
+.about-hero.stacked-section {
+  z-index: 1;
+  top: 0;
+}
+
+.about-section-story.stacked-section {
+  z-index: 2;
+}
+
+.about-section-values.stacked-section {
+  z-index: 3;
+}
+
+.about-section-process.stacked-section {
+  z-index: 4;
+}
+
+.about-section-trust.stacked-section {
+  z-index: 5;
+}
+
+.about-stack-section.stacked-section {
+  z-index: 6;
+}
+
+.about-section-promise.stacked-section {
+  z-index: 7;
+}
+
 .hero-left {
   max-width: 520px;
   display: flex;

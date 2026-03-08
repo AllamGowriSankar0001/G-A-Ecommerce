@@ -12,7 +12,7 @@ function About() {
   };
 
   return (
-    <main className="about-page">
+    <main className="about-page stacked-home">
       <section className="about-hero stacked-section">
         <div className="about-hero-content">
           <span className="about-eyebrow">{heroData.eyebrow}</span>
@@ -26,7 +26,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section stacked-section">
+      <section className="about-section about-section-story stacked-section">
         <div className="about-container">
           <h2>Our Story</h2>
           <div className="about-story-content">
@@ -43,7 +43,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section light stacked-section">
+      <section className="about-section light about-section-values stacked-section">
         <div className="about-container">
           <h2>What We Stand For</h2>
           <div className="values-grid">
@@ -72,7 +72,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section stacked-section">
+      <section className="about-section about-section-process stacked-section">
         <div className="about-container">
           <h2>How We Work</h2>
           <p className="about-process-intro">
@@ -95,7 +95,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section light stacked-section">
+      <section className="about-section light about-section-trust stacked-section">
         <div className="about-container">
           <h2>Trusted by Thousands</h2>
           <p className="about-trust-intro">
@@ -134,7 +134,6 @@ function About() {
                 <span className="about-stack-item">React</span>
                 <span className="about-stack-item">Vite</span>
                 <span className="about-stack-item">React Router</span>
-                <span className="about-stack-item">Tailwind CSS</span>
               </div>
             </div>
             <div className="about-stack-group">
@@ -159,13 +158,23 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section stacked-section">
+      <section className="about-section about-section-promise stacked-section">
         <div className="about-container">
           <h2>Our Promise</h2>
           <p>
             We don't chase trends or overproduce. We create meaningful
             products, stand behind our quality, and treat every
             customer relationship with care and respect.
+          </p>
+          <p>
+            Every order is backed by clear communication, fair policies, and a support team
+            that actually listens. If something doesn&apos;t feel right, we work with you to
+            make it right — whether that&apos;s an exchange, a return, or a simple sizing question.
+          </p>
+          <p>
+            We are continuously improving fabrics, fits, and experiences based on real feedback
+            from our community. When you shop with G&amp;A, you&apos;re not just buying a product;
+            you&apos;re joining an ongoing conversation about better everyday essentials.
           </p>
           <p className="about-promise-close">Thank you for being part of our journey.</p>
           
