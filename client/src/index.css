@@ -448,7 +448,7 @@ body::-webkit-scrollbar {
   top: 0px;
 }
 
-.stacked-categories {
+.stacked-bestseller {
   z-index: 2;
   background: #f9fafb;
 }
@@ -1344,9 +1344,9 @@ body::-webkit-scrollbar {
   text-align: center;
 }
 
-/* Tech stack section - clean stacked view */
+/* Tech stack section - simple stacked view */
 .about-stack-section {
-  background: linear-gradient(180deg, #f0f0f0 0%, #e8e8e8 100%);
+  background: #f7f7f7;
 }
 
 .about-stack-intro {
@@ -1366,31 +1366,8 @@ body::-webkit-scrollbar {
 .about-stack-group {
   background: #fff;
   border-radius: 12px;
-  padding: 24px 28px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 20px 22px;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  animation: about-stack-fade-in 0.5s ease forwards;
-}
-
-.about-stack-group:nth-child(1) { animation-delay: 0.05s; opacity: 0; }
-.about-stack-group:nth-child(2) { animation-delay: 0.15s; opacity: 0; }
-.about-stack-group:nth-child(3) { animation-delay: 0.25s; opacity: 0; }
-
-@keyframes about-stack-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.about-stack-group:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .about-stack-label {
@@ -1410,18 +1387,17 @@ body::-webkit-scrollbar {
 
 .about-stack-item {
   display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
+  padding: 6px 12px;
+  font-size: 0.88rem;
   font-weight: 500;
-  background: #111827;
-  color: #fff;
-  border-radius: 8px;
-  transition: background 0.2s ease, transform 0.2s ease;
+  background: #f3f4f6;
+  color: #111827;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
 }
 
 .about-stack-item:hover {
-  background: #1f2937;
-  transform: scale(1.02);
+  background: #e5e7eb;
 }
 
 .trust-stats {
