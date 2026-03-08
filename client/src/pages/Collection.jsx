@@ -195,6 +195,7 @@ const Collection = () => {
                           src={product.images[0]}
                           alt={product.title}
                           className="product-img"
+                          loading="lazy"
                         />
                       ) : (
                         <div className="product-img product-img-placeholder" aria-hidden />
