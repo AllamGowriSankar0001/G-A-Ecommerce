@@ -40,24 +40,21 @@ This document explains the entire G&A Ecommerce project: structure, features, te
 ## 2. Tech Stack
 
 ### Frontend
-- **React 19** – UI library
-- **Vite 7** – Build tool and dev server
-- **React Router 7** – Client-side routing
-- **Tailwind CSS** – Styling
-- **Lucide React** – Icons
-- **React Toastify** – Notifications
+- **React** – UI library (`react` / `react-dom`)
+- **Vite** – Build tool and dev server
+- **React Router** – Client-side routing
+- **Tailwind CSS** – Utility-first styling (via `tailwindcss`, `@tailwindcss/vite`, `tailwindcss-animate`)
 
 ### Backend
 - **Node.js** – Runtime
-- **Express 5** – Web framework
-- **MongoDB** – Database (via Mongoose)
-- **JWT** – Authentication
+- **Express** – Web framework
+- **MongoDB + Mongoose** – Database and ODM
+- **JWT** – Authentication (`jsonwebtoken`)
 - **bcrypt** – Password hashing
 - **Multer** – File upload handling
 - **Cloudinary** – Image storage
-- **Brevo (Sendinblue)** – Transactional emails
-- **Razorpay** – Payment gateway (integrated)
-- **Stripe** – Payment gateway (integrated)
+- **Brevo (Sendinblue)** – Transactional emails (`sib-api-v3-sdk`)
+- **CORS, dotenv** – CORS configuration and environment management
 
 ---
 

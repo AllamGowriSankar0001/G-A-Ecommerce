@@ -13,7 +13,7 @@ function About() {
 
   return (
     <main className="about-page">
-      <section className="about-hero">
+      <section className="about-hero stacked-section">
         <div className="about-hero-content">
           <span className="about-eyebrow">{heroData.eyebrow}</span>
           <h1>{heroData.title}<br />{heroData.titleLine2}</h1>
@@ -26,7 +26,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section">
+      <section className="about-section stacked-section">
         <div className="about-container">
           <h2>Our Story</h2>
           <div className="about-story-content">
@@ -43,7 +43,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section light">
+      <section className="about-section light stacked-section">
         <div className="about-container">
           <h2>What We Stand For</h2>
           <div className="values-grid">
@@ -72,7 +72,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section">
+      <section className="about-section stacked-section">
         <div className="about-container">
           <h2>How We Work</h2>
           <p className="about-process-intro">
@@ -95,7 +95,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section light">
+      <section className="about-section light stacked-section">
         <div className="about-container">
           <h2>Trusted by Thousands</h2>
           <p className="about-trust-intro">
@@ -121,7 +121,45 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section">
+      <section className="about-section about-stack-section stacked-section">
+        <div className="about-container">
+          <h2>Built With</h2>
+          <p className="about-stack-intro">
+            G&A Ecommerce is powered by modern, reliable technologies. Here's our stack:
+          </p>
+          <div className="about-stack-grid">
+            <div className="about-stack-group">
+              <h3 className="about-stack-label">Frontend</h3>
+              <div className="about-stack-list">
+                <span className="about-stack-item">React</span>
+                <span className="about-stack-item">Vite</span>
+                <span className="about-stack-item">React Router</span>
+                <span className="about-stack-item">Tailwind CSS</span>
+              </div>
+            </div>
+            <div className="about-stack-group">
+              <h3 className="about-stack-label">Backend</h3>
+              <div className="about-stack-list">
+                <span className="about-stack-item">Node.js</span>
+                <span className="about-stack-item">Express</span>
+                <span className="about-stack-item">MongoDB</span>
+                <span className="about-stack-item">Mongoose</span>
+              </div>
+            </div>
+            <div className="about-stack-group">
+              <h3 className="about-stack-label">Services</h3>
+              <div className="about-stack-list">
+                <span className="about-stack-item">JWT</span>
+                <span className="about-stack-item">bcrypt</span>
+                <span className="about-stack-item">Cloudinary</span>
+                <span className="about-stack-item">Brevo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="about-section stacked-section">
         <div className="about-container">
           <h2>Our Promise</h2>
           <p>

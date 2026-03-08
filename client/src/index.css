@@ -453,21 +453,6 @@ body::-webkit-scrollbar {
   background: #f9fafb;
 }
 
-.stacked-bestseller {
-  z-index: 3;
-  background: #ffffff;
-}
-
-.stacked-newarrivals {
-  z-index: 4;
-  background: #f9fafb;
-}
-
-.stacked-trust {
-  z-index: 5;
-  background: #ffffff;
-}
-
 .hero-left {
   max-width: 520px;
   display: flex;
@@ -1190,7 +1175,7 @@ body::-webkit-scrollbar {
   text-align: center;
   background: linear-gradient(180deg, #111 0%, #222 100%);
   color: #fff;
-  padding: 0 20px;
+  padding: 100px 20px;
 }
 
 .about-hero-content {
@@ -1357,6 +1342,86 @@ body::-webkit-scrollbar {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+/* Tech stack section - clean stacked view */
+.about-stack-section {
+  background: linear-gradient(180deg, #f0f0f0 0%, #e8e8e8 100%);
+}
+
+.about-stack-intro {
+  font-size: 1.05rem !important;
+  margin-bottom: 36px !important;
+  max-width: 560px;
+  opacity: 0.9;
+}
+
+.about-stack-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 640px;
+}
+
+.about-stack-group {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: about-stack-fade-in 0.5s ease forwards;
+}
+
+.about-stack-group:nth-child(1) { animation-delay: 0.05s; opacity: 0; }
+.about-stack-group:nth-child(2) { animation-delay: 0.15s; opacity: 0; }
+.about-stack-group:nth-child(3) { animation-delay: 0.25s; opacity: 0; }
+
+@keyframes about-stack-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-stack-group:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.about-stack-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #666;
+  margin: 0 0 16px 0;
+}
+
+.about-stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+
+.about-stack-item {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: #111827;
+  color: #fff;
+  border-radius: 8px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.about-stack-item:hover {
+  background: #1f2937;
+  transform: scale(1.02);
 }
 
 .trust-stats {
@@ -3503,6 +3568,15 @@ select:focus {
   .about-trust-intro {
     font-size: 0.95rem !important;
     margin-bottom: 24px !important;
+  }
+
+  .about-stack-group {
+    padding: 20px 22px;
+  }
+
+  .about-stack-item {
+    font-size: 0.85rem;
+    padding: 6px 12px;
   }
 
   .about-cta-btn {
