@@ -96,6 +96,7 @@ const NewArrivals = () => {
                   alt={product.title}
                   className="product-img"
                   style={{ height: "160px" }}
+                  loading="lazy"
                 />
               </div>
 
