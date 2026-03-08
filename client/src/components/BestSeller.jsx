@@ -96,6 +96,7 @@ const Bestseller = () => {
                     alt={product.title}
                     className="product-img"
                     style={{ height: "160px" }}
+                    loading="lazy"
                   />
                 </div>
                 <div className="product-card-info">
